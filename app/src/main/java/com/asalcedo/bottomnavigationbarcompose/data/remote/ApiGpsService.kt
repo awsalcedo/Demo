@@ -1,11 +1,12 @@
 package com.asalcedo.bottomnavigationbarcompose.data.remote
 
+import com.asalcedo.bottomnavigationbarcompose.data.remote.model.TokenResponse
 import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface ApiGpsService {
-    @POST("/api/v1/gettoken")
-    suspend fun getToken(@Body tokenRequest: TokenRequest)
+    @POST("/gettoken")
+    suspend fun getToken(@Body tokenRequest: TokenRequest) : TokenResponse
 }
 
 data class TokenRequest(
