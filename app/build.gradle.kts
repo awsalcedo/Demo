@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.asalcedo.bottomnavigationbarcompose"
+    namespace = "com.asalcedo.demo"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.asalcedo.bottomnavigationbarcompose"
+        applicationId = "com.asalcedo.demo"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -69,8 +69,16 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     //DaggerHilt
-    implementation("com.google.dagger:hilt-android:2.48")
+    implementation("com.google.dagger:hilt-android:2.49")
     kapt("com.google.dagger:hilt-compiler:2.48")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0-alpha01")
+    //DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    //LiveData
+    implementation("androidx.compose.runtime:runtime-livedata")
+    //Icons extended
+    implementation("androidx.compose.material:material-icons-extended:1.5.4")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
