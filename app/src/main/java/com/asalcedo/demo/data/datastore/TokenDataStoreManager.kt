@@ -1,11 +1,12 @@
 package com.asalcedo.demo.data.datastore
 
 import android.content.Context
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.preferencesDataStore
+import com.asalcedo.demo.util.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -20,7 +21,7 @@ import javax.inject.Inject
  * All rights reserve 2022.
  ***/
 // TokenDataStore.kt
-private val Context.tokenDataStore by preferencesDataStore(name = "user_preferences")
+private val Context.tokenDataStore by preferencesDataStore(name = Constants.DATASTORE_PREFERENCES_NAME)
 
 class TokenDataStoreManager @Inject constructor(@ApplicationContext context: Context) {
 

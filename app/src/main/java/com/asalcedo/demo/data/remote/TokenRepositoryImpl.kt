@@ -12,12 +12,12 @@ class TokenRepositoryImpl @Inject constructor(
         val tokenResponse =
             tokenService.getTokenApi(user, password)
 
-        if (tokenResponse.status == 200 && tokenResponse.data.isNotEmpty()) {
+        return if (tokenResponse.status == 200 && tokenResponse.data.isNotEmpty()) {
             saveTokeDataStore(tokenResponse.data)
             Log.d("ALEX", tokenResponse.data)
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 

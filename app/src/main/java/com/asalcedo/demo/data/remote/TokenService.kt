@@ -11,6 +11,6 @@ import javax.inject.Inject
  ***/
 class TokenService @Inject constructor(private val tokenApiService: TokenApiService) {
     suspend fun getTokenApi(user: String, password: String): TokenResponse {
-        return tokenApiService.getToken("ad8b32fce1b86e4bbca443318b93cab9", "", user, password)
+        return tokenApiService.getToken(username = user, password = password)
     }
 }

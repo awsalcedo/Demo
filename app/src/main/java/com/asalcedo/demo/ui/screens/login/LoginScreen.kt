@@ -1,6 +1,7 @@
 package com.asalcedo.demo.ui.screens.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,6 +38,7 @@ import com.asalcedo.demo.ui.common.DontHaveAccountRow
 import com.asalcedo.demo.ui.navigation.ItemsMenu.HomeScreen
 import com.asalcedo.demo.ui.theme.AlegreyaFontFamily
 import com.asalcedo.demo.ui.theme.AlegreyaSansFontFamily
+import com.asalcedo.demo.util.UiState
 import kotlinx.coroutines.launch
 
 /****
@@ -137,7 +140,8 @@ fun LoginScreen(
                     CTextField(
                         hint = "Password",
                         value = password.trim(),
-                        onValueChange = { viewModel.onLoginChanged(email, it) })
+                        onValueChange = { viewModel.onLoginChanged(email, it) },
+                        isPassword = true)
 
                     Spacer(modifier = Modifier.height(24.dp))
 
