@@ -2,10 +2,10 @@ package com.asalcedo.demo.di
 
 import android.content.Context
 import com.asalcedo.demo.data.datastore.TokenDataStoreManager
-import com.asalcedo.demo.data.remote.TokenApiService
-import com.asalcedo.demo.data.remote.TokenRepository
-import com.asalcedo.demo.data.remote.TokenRepositoryImpl
-import com.asalcedo.demo.data.remote.TokenService
+import com.asalcedo.demo.data.remote.token.TokenApiService
+import com.asalcedo.demo.data.remote.token.TokenRemoteDataSourceImpl
+import com.asalcedo.demo.data.remote.token.TokenRepository
+import com.asalcedo.demo.data.remote.token.TokenRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -49,7 +49,7 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideTokenRepository(
-        service: TokenService,
+        service: TokenRemoteDataSourceImpl,
         dataStoreManager: TokenDataStoreManager
     ): TokenRepository {
         return TokenRepositoryImpl(service, dataStoreManager)

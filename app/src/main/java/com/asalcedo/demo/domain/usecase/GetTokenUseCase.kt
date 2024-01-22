@@ -1,7 +1,9 @@
 package com.asalcedo.demo.domain.usecase
 
-import com.asalcedo.demo.data.remote.TokenRepository
-import com.asalcedo.demo.util.Response
+import android.util.Log
+import com.asalcedo.demo.data.remote.exception.TokenException
+import com.asalcedo.demo.data.remote.token.TokenRepository
+import com.asalcedo.demo.util.ResponseState
 import javax.inject.Inject
 
 /****
@@ -12,11 +14,18 @@ import javax.inject.Inject
  * Se maneja las excepciones generales que pueden surgir durante la obtención del token y las encapsula en un `Response`
  ***/
 class GetTokenUseCase @Inject constructor(private val repository: TokenRepository) {
-    suspend operator fun invoke(user: String, password: String): Response<Boolean> =
-        try {
-            val response = repository.getTokenApi(user, password)
-            Response.Success(response)
+    suspend operator fun invoke(user: String, password: String): ResponseState<Int> {
+        return try {
+            val status = repository.getTokenApi(user, password)
+            ResponseState.Success(status)
+        } catch (e: TokenException) {
+            Log.d("Alex", "Error al obtener el token")
+            ResponseState.Error("Error al obtener el token")
         } catch (e: Exception) {
-            Response.Error("Error al obtener el token: ${e.message}")
+            Log.d("Alex", "Error desconocido: ${e.message}")
+            ResponseState.Error("Error inseperado ${e.message}")
+
         }
+    }
+
 }

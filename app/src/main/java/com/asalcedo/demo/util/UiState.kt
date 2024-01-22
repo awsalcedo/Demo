@@ -7,7 +7,8 @@ package com.asalcedo.demo.util
  * @constructor Create empty Ui state
  */
 sealed class UiState<out T> {
-    data class Success<out T>(val data: T) : UiState<T>()
-    data class Error(val errorMessage: String) : UiState<Nothing>()
-    object Loading : UiState<Nothing>()
+    data class Loading<out T>(val isLoading: T? = null) : UiState<T>()
+    data class Success<out T>(val data: T? = null) : UiState<T>()
+    data class Error<out T>(val errorMessage: T? = null) : UiState<Nothing>()
+
 }

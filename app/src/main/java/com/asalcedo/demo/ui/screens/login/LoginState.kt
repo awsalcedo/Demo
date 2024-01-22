@@ -10,7 +10,7 @@ package com.asalcedo.demo.ui.screens.login
 
 sealed class LoginState {
     object Loading : LoginState()
-    data class Success(val isLogin: Boolean) : LoginState()
+    data class Success(val status: Int) : LoginState()
     data class Error(val error: String) : LoginState()
 
 }

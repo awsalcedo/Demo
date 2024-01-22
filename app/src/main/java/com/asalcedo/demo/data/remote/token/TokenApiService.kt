@@ -1,5 +1,7 @@
-package com.asalcedo.demo.data.remote
+package com.asalcedo.demo.data.remote.token
 
+import com.asalcedo.demo.data.datastore.TokenDataStoreManager
+import com.asalcedo.demo.data.remote.model.ClientsResponse
 import com.asalcedo.demo.data.remote.model.TokenResponse
 import com.asalcedo.demo.util.Constants
 import retrofit2.http.Field
@@ -15,22 +17,11 @@ interface TokenApiService {
         @Field("username") username: String,
         @Field("password") password: String
     ): TokenResponse
+
+    @FormUrlEncoded
+    @POST("getClients")
+    suspend fun getClients(
+        @Field("apikey") apikey: String = Constants.API_KEY,
+        @Field("token") token: String
+    ): ClientsResponse
 }
-
-data class TokenRequest(
-    val apiKey: String,
-    val token: String? = null,
-    val username: String,
-    val password: String
-)
-
-data class CommonRequest(
-    val apiKey: String,
-    val token: String
-)
-
-data class OtherRequest(
-    val apiKey: String,
-    val token: String,
-    // Otros parámetros específicos de la solicitud
-)

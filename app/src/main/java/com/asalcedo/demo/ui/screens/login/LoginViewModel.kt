@@ -1,17 +1,17 @@
 package com.asalcedo.demo.ui.screens.login
 
-import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asalcedo.demo.domain.usecase.GetTokenUseCase
-import com.asalcedo.demo.util.Response
+import com.asalcedo.demo.util.ResponseState
 import com.asalcedo.demo.util.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 /****
@@ -33,14 +33,14 @@ class LoginViewModel @Inject constructor(private val useCase: GetTokenUseCase) :
     private val _loginEnabled = MutableLiveData<Boolean>()
     val loginEnabled: LiveData<Boolean> = _loginEnabled
 
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
+    /*private val _navigateToHome = MutableLiveData<Boolean>()
+    val navigateToHome: LiveData<Boolean> = _navigateToHome*/
 
-    private val _doLogin = MutableLiveData<Boolean>()
-    val doLogin: LiveData<Boolean> = _doLogin
+    private val _uiState = MutableLiveData<UiState<Int>>()
+    val uiState: LiveData<UiState<Int>> = _uiState
 
-    private val _uiState = MutableLiveData<UiState<Boolean>>()
-    val uiState: LiveData<UiState<Boolean>> = _uiState
+    private val _loginUiState = MutableLiveData<LoginState>()
+    val loginUiState: LiveData<LoginState> = _loginUiState
 
     fun onLoginChanged(email: String, password: String) {
         _email.value = email
@@ -56,27 +56,44 @@ class LoginViewModel @Inject constructor(private val useCase: GetTokenUseCase) :
     suspend fun onLoginSelected() {
 
         viewModelScope.launch {
-            //_uiState.value = UiState.Loading
-            _isLoading.value = true
-            when (val result = useCase(email.value!!, password.value!!)) {
-                is Response.Success -> {
-                    //navegar a HomeScreen
-                    _doLogin.value = true
-                }
-                is Response.Error -> {
-                    // Manejar el error, puedes acceder a result.errorMessage
-                    _uiState.value = UiState.Error(result.errorMessage?: "Error desconocido" )
-                    Log.e("LoginViewModel", "Error al obtener el token para realizar el login: ${result.errorMessage}")
-                }
-                else -> {
-                    // Acciones o lógica adicional para casos no cubiertos
-                    _uiState.value = UiState.Error("Error desconocido")
-                    Log.e("LoginViewModel", "Caso por defecto: Error desconocido")
-                    //_isLoading.value = false
-                }
-            }
-            _isLoading.value = false
+            //_uiState.value = UiState.Loading(isLoading = true)
+            _loginUiState.value = LoginState.Loading
 
+            val result = withContext(Dispatchers.IO) {
+                useCase(email.value!!, password.value!!)
+            }
+
+            when (result) {
+                is ResponseState.Success -> {
+                    //_uiState.value = UiState.Success(result.data)
+                    _loginUiState.value = LoginState.Success(result.data)
+                    //_uiState.value = UiState.Loading(isLoading = false)
+                    //_navigateToHome.value = true
+
+                }
+
+                is ResponseState.Error -> {
+                    _loginUiState.value = LoginState.Error(result.errorMessage)
+                    //_uiState.value = UiState.Error(result.errorMessage)
+                    //_uiState.value = UiState.Loading(isLoading = false)
+                }
+
+            }
+
+            /*when (val result = useCase(email.value!!, password.value!!)) {
+                is ResponseState.Success -> {
+                    _uiState.value = UiState.Success(result.data)
+                    _uiState.value = UiState.Loading(isLoading = false)
+                    //_navigateToHome.value = true
+
+                }
+
+                is ResponseState.Error -> {
+                    _uiState.value = UiState.Error(result.errorMessage)
+                    _uiState.value = UiState.Loading(isLoading = false)
+                }
+
+            }*/
         }
 
 

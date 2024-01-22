@@ -1,23 +1,23 @@
-package com.asalcedo.demo.data.remote
+package com.asalcedo.demo.data.remote.token
 
 import android.util.Log
 import com.asalcedo.demo.data.datastore.TokenDataStoreManager
 import javax.inject.Inject
 
 class TokenRepositoryImpl @Inject constructor(
-    private val tokenService: TokenService,
+    private val tokenRemoteDataSourceImpl: TokenRemoteDataSourceImpl,
     private val tokenDataStoreManager: TokenDataStoreManager
 ) : TokenRepository {
-    override suspend fun getTokenApi(user: String, password: String): Boolean {
+    override suspend fun getTokenApi(user: String, password: String): Int {
         val tokenResponse =
-            tokenService.getTokenApi(user, password)
+            tokenRemoteDataSourceImpl.getTokenApi(user, password)
 
         return if (tokenResponse.status == 200 && tokenResponse.data.isNotEmpty()) {
             saveTokeDataStore(tokenResponse.data)
             Log.d("ALEX", tokenResponse.data)
-            true
+            tokenResponse.status
         } else {
-            false
+            -1
         }
     }
 
