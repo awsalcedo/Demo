@@ -63,231 +63,133 @@ fun LoginScreen(
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    /// Muestra el Snackbar cuando se detecta un estado de error
+    // Muestra el Snackbar cuando se detecta un estado de error o éxito con código no 200
     loginUiState?.let {
-        if (it is LoginState.Error) {
+        if (it is LoginState.Error || (it is LoginState.Success && it.status != 200)) {
             LaunchedEffect(it) {
-                snackbarHostState.showSnackbar(it.error)
+                snackbarHostState.showSnackbar(
+                    when (it) {
+                        is LoginState.Error -> it.error
+                        is LoginState.Success -> "Server returned status code: ${it.status}"
+                        else -> ""
+                    }
+                )
             }
         }
     }
 
+    // Contenido del cuerpo
+    val content: @Composable (LoginState) -> Unit = {
+        Surface(
+            color = Color(0xFF253334),
+            modifier = Modifier.fillMaxSize()
+        ) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                // Fondo de imagen
+                Image(
+                    painter = painterResource(id = R.drawable.bg1),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(190.dp)
+                        .align(Alignment.BottomCenter)
+                )
 
+                // Contenido
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp)
+                ) {
+                    // Logo
+                    Image(
+                        painter = painterResource(id = R.drawable.logo),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .padding(top = 54.dp)
+                            .height(100.dp)
+                            .align(Alignment.Start)
+                            .offset(x = (-20).dp)
+                    )
+
+                    Text(
+                        text = "Login",
+                        style = TextStyle(
+                            fontSize = 28.sp,
+                            fontFamily = AlegreyaFontFamily,
+                            fontWeight = FontWeight(500),
+                            color = Color.White
+                        ),
+                        modifier = Modifier.align(Alignment.Start)
+                    )
+
+                    Text(
+                        "Inicia sesión ahora para acceder.",
+                        style = TextStyle(
+                            fontSize = 20.sp,
+                            fontFamily = AlegreyaSansFontFamily,
+                            color = Color(0xB2FFFFFF)
+                        ),
+                        modifier = Modifier
+                            .align(Alignment.Start)
+                            .padding(bottom = 24.dp)
+                    )
+
+                    // Campos de texto
+                    CTextField(
+                        hint = "Email Address",
+                        value = email.trim(),
+                        onValueChange = { viewModel.onLoginChanged(it, password) })
+
+                    CTextField(
+                        hint = "Password",
+                        value = password.trim(),
+                        onValueChange = { viewModel.onLoginChanged(email, it) },
+                        isPassword = true
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Botón de inicio de sesión
+                    CButtonLogin(
+                        text = "Sign In",
+                        onClick = {
+                            coroutineScope.launch {
+                                viewModel.onLoginSelected()
+                            }
+                        },
+                        loginEnable = loginEnabled
+                    )
+
+                    // Enlace para registrarse
+                    DontHaveAccountRow(
+                        onSignupTap = {
+                            navController.navigate("signup")
+                        }
+                    )
+                }
+            }
+        }
+    }
+
+    // Mostrar indicador de carga o el contenido del cuerpo según el estado
     when (loginUiState) {
         is LoginState.Success -> {
-            //navegar a HomeScreen
             if ((loginUiState as LoginState.Success).status == 200) {
                 navController.navigate(HomeScreen.route)
             } else {
-                //Body
-                Surface(
-                    color = Color(0xFF253334),
-                    modifier = Modifier.fillMaxSize()
-                ) {
-
-
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        /// Background Image
-                        Image(
-                            painter = painterResource(id = R.drawable.bg1),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(190.dp)
-                                .align(Alignment.BottomCenter)
-                        )
-
-                        /// Content
-
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(horizontal = 24.dp)
-                        ) {
-
-                            // Logo
-                            Image(
-                                painter = painterResource(id = R.drawable.logo),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .padding(top = 54.dp)
-                                    .height(100.dp)
-                                    .align(Alignment.Start)
-                                    .offset(x = (-20).dp)
-                            )
-
-                            Text(
-                                text = "Login",
-                                style = TextStyle(
-                                    fontSize = 28.sp,
-                                    fontFamily = AlegreyaFontFamily,
-                                    fontWeight = FontWeight(500),
-                                    color = Color.White
-                                ),
-                                modifier = Modifier.align(Alignment.Start)
-                            )
-
-                            Text(
-                                "Inicia sesión ahora para acceder.",
-                                style = TextStyle(
-                                    fontSize = 20.sp,
-                                    fontFamily = AlegreyaSansFontFamily,
-                                    color = Color(0xB2FFFFFF)
-                                ),
-                                modifier = Modifier
-                                    .align(Alignment.Start)
-                                    .padding(bottom = 24.dp)
-                            )
-
-                            // Text Field
-                            CTextField(
-                                hint = "Email Address",
-                                value = email.trim(),
-                                onValueChange = { viewModel.onLoginChanged(it, password) })
-
-                            CTextField(
-                                hint = "Password",
-                                value = password.trim(),
-                                onValueChange = { viewModel.onLoginChanged(email, it) },
-                                isPassword = true
-                            )
-
-                            Spacer(modifier = Modifier.height(24.dp))
-
-                            CButtonLogin(
-                                text = "Sign In",
-                                onClick = {
-                                    coroutineScope.launch {
-                                        viewModel.onLoginSelected()
-                                    }
-
-                                },
-                                loginEnable = loginEnabled
-                            )
-
-                            DontHaveAccountRow(
-                                onSignupTap = {
-                                    navController.navigate("signup")
-                                }
-                            )
-
-                        }
-
-                    }
-
-                }
+                content(loginUiState as LoginState.Success)
             }
-
         }
-
         is LoginState.Loading -> {
-            //Mostrar CircularProgressIndicator
+            // Mostrar CircularProgressIndicator
             Box(Modifier.fillMaxSize()) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
-
         }
-
         else -> {
-            //Body
-            Surface(
-                color = Color(0xFF253334),
-                modifier = Modifier.fillMaxSize()
-            ) {
-
-
-                Box(modifier = Modifier.fillMaxSize()) {
-                    /// Background Image
-                    Image(
-                        painter = painterResource(id = R.drawable.bg1),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(190.dp)
-                            .align(Alignment.BottomCenter)
-                    )
-
-                    /// Content
-
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 24.dp)
-                    ) {
-
-                        // Logo
-                        Image(
-                            painter = painterResource(id = R.drawable.logo),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .padding(top = 54.dp)
-                                .height(100.dp)
-                                .align(Alignment.Start)
-                                .offset(x = (-20).dp)
-                        )
-
-                        Text(
-                            text = "Login",
-                            style = TextStyle(
-                                fontSize = 28.sp,
-                                fontFamily = AlegreyaFontFamily,
-                                fontWeight = FontWeight(500),
-                                color = Color.White
-                            ),
-                            modifier = Modifier.align(Alignment.Start)
-                        )
-
-                        Text(
-                            "Inicia sesión ahora para acceder.",
-                            style = TextStyle(
-                                fontSize = 20.sp,
-                                fontFamily = AlegreyaSansFontFamily,
-                                color = Color(0xB2FFFFFF)
-                            ),
-                            modifier = Modifier
-                                .align(Alignment.Start)
-                                .padding(bottom = 24.dp)
-                        )
-
-                        // Text Field
-                        CTextField(
-                            hint = "Email Address",
-                            value = email.trim(),
-                            onValueChange = { viewModel.onLoginChanged(it, password) })
-
-                        CTextField(
-                            hint = "Password",
-                            value = password.trim(),
-                            onValueChange = { viewModel.onLoginChanged(email, it) },
-                            isPassword = true
-                        )
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        CButtonLogin(
-                            text = "Sign In",
-                            onClick = {
-                                coroutineScope.launch {
-                                    viewModel.onLoginSelected()
-                                }
-
-                            },
-                            loginEnable = loginEnabled
-                        )
-
-                        DontHaveAccountRow(
-                            onSignupTap = {
-                                navController.navigate("signup")
-                            }
-                        )
-
-                    }
-
-                }
-
-            }
+            content(loginUiState ?: LoginState.Loading)
         }
     }
 

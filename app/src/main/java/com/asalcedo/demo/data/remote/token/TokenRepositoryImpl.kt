@@ -12,13 +12,20 @@ class TokenRepositoryImpl @Inject constructor(
         val tokenResponse =
             tokenRemoteDataSourceImpl.getTokenApi(user, password)
 
-        return if (tokenResponse.status == 200 && tokenResponse.data.isNotEmpty()) {
+        /*return if (tokenResponse.status == 200 && tokenResponse.data.isNotEmpty()) {
             saveTokeDataStore(tokenResponse.data)
             Log.d("ALEX", tokenResponse.data)
             tokenResponse.status
         } else {
-            -1
+            tokenResponse.status
+        }*/
+
+        if (tokenResponse.status == 200 && tokenResponse.data.isNotEmpty()) {
+            saveTokeDataStore(tokenResponse.data)
+            Log.d("ALEX", tokenResponse.data)
         }
+
+        return tokenResponse.status
     }
 
     private suspend fun saveTokeDataStore(token: String) {
