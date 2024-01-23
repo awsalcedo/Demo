@@ -1,5 +1,6 @@
 package com.asalcedo.demo.data.remote.client
 
+import android.util.Log
 import com.asalcedo.demo.data.datastore.TokenDataStoreManager
 import com.asalcedo.demo.data.remote.model.toDomain
 import com.asalcedo.demo.domain.model.ClientModel
@@ -18,6 +19,7 @@ class ClientRepositoryImpl @Inject constructor(
 ) : ClientRepository {
     override suspend fun getClients(): List<ClientModel> {
         val token = dataStoreManager.getTokenFlow.firstOrNull() ?: return emptyList()
+        Log.d("ALEX", "Token obtenido desde el DataStore: $token")
 
         val clientsResponse = clientRemoteDataSourceImpl.getClients(token)
 

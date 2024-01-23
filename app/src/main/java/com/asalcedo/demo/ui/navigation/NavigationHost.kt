@@ -4,14 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.asalcedo.demo.ui.navigation.NavScreen.SignupScreen
 import com.asalcedo.demo.ui.navigation.NavScreen.WelcomeScreen
 import com.asalcedo.demo.ui.navigation.NavScreen.LoginScreen
 import com.asalcedo.demo.ui.navigation.NavScreen.HomeScreen
 import com.asalcedo.demo.ui.navigation.NavScreen.InfoScreen
 import com.asalcedo.demo.ui.navigation.NavScreen.MapScreen
-import com.asalcedo.demo.ui.screens.HomeScreen
+import com.asalcedo.demo.ui.screens.home.HomeScreen
 import com.asalcedo.demo.ui.screens.InfoScreen
 import com.asalcedo.demo.ui.screens.MapScreen
 import com.asalcedo.demo.ui.screens.login.LoginScreen
@@ -24,7 +23,7 @@ fun NavigationHost(navController: NavHostController) {
         // also pass navController to each screen so we can use navController in there
         composable(WelcomeScreen.name) { WelcomeScreen(navController) }
         composable(LoginScreen.name) { LoginScreen(navController) }
-        composable(HomeScreen.name) { HomeScreen(navController) }
+        composable(HomeScreen.name) { HomeScreen() }
         composable(InfoScreen.name) { InfoScreen(navController) }
         composable(SignupScreen.name) { InfoScreen(navController) }
         composable(MapScreen.name) { MapScreen(navController) }

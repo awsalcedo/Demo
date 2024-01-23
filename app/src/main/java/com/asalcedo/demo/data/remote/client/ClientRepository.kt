@@ -1,6 +1,5 @@
 package com.asalcedo.demo.data.remote.client
 
-import com.asalcedo.demo.data.remote.model.ClientsResponse
 import com.asalcedo.demo.domain.model.ClientModel
 
 /****
