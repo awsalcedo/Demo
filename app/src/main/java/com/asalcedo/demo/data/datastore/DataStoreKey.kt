@@ -10,4 +10,5 @@ import androidx.datastore.preferences.core.stringPreferencesKey
  ***/
 object DataStoreKeys {
     val TOKEN_KEY = stringPreferencesKey("token_key")
+    val CLIENTS_KEY = stringPreferencesKey("clients_key")
 }

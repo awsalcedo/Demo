@@ -17,11 +17,4 @@ interface TokenApiService {
         @Field("username") username: String,
         @Field("password") password: String
     ): TokenResponse
-
-    @FormUrlEncoded
-    @POST("getClients")
-    suspend fun getClients(
-        @Field("apikey") apikey: String = Constants.API_KEY,
-        @Field("token") token: String
-    ): ClientsResponse
 }

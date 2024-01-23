@@ -6,7 +6,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStore
+import com.asalcedo.demo.domain.model.ClientModel
 import com.asalcedo.demo.util.Constants
+import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -44,5 +46,12 @@ class TokenDataStoreManager @Inject constructor(@ApplicationContext context: Con
         .map { preferences ->
             preferences[DataStoreKeys.TOKEN_KEY]
         }
+
+    suspend fun saveClients(clientModels: List<ClientModel>) {
+        dataStore.edit { preferences ->
+            // Guardar la lista de clientes serializada en JSON en el DataStore
+            preferences[DataStoreKeys.CLIENTS_KEY] = Gson().toJson(clientModels)
+        }
+    }
 
 }
